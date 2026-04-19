@@ -1,0 +1,16 @@
+COPYRIGHT E TERMOS DE LICENÇA PROPRIETÁRIA
+
+Copyright (c) 2026 Allan Martins / Cartório 3º Ofício.
+Todos os direitos reservados.
+
+1. PROPRIEDADE
+Este aplicativo, incluindo mas não se limitando a todo o seu código-fonte, arquitetura, design, UI/UX, logotipos e componentes integrados, são propriedade exclusiva do Cartório 3º Ofício e de seu desenvolvedor responsável (Allan Martins).
+
+2. DA PROTEÇÃO LEGAL
+O código está protegido pela Lei de Direitos Autorais e Propriedade Intelectual (Lei 9.610/98). Nenhuma parte deste software pode ser copiada, reproduzida, distribuída, vendida ou modificada sob qualquer forma ou meio sem a permissão expressa por escrito do detentor dos direitos.
+
+3. USO RESTRITO
+O uso deste software é rigorosamente restrito aos servidores e plataformas do Cartório 3º Ofício, com integrações validadas pelo backend central. Quaisquer instâncias não-autorizadas (forks, ports, ou cópias vazadas) estão sujeitas às sanções penais cabíveis referentes à Lei de Softwares (Lei 9.609/98).
+
+4. TRATAMENTO DE DADOS (LGPD)
+Este software atua em completa conformidade com a Lei Geral de Proteção de Dados (13.709/2018), assegurando que APIs integradas (ViaCEP, CNPJ.ws, Nominatim, BCB) não vazem nem componham bancos de dados maliciosos.
