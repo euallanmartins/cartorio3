@@ -481,9 +481,10 @@ const styles = StyleSheet.create({
     gap: 4,
   },
   footerContainer: {
-    paddingVertical: 16,
+    paddingVertical: 12,
     alignItems: 'center',
     width: '100%',
+    backgroundColor: 'rgba(0,0,0,0.2)',
   },
   footerText: {
     color: 'rgba(255, 255, 255, 0.5)',

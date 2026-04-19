@@ -130,9 +130,8 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     gap: 8,
-    position: 'absolute',
-    bottom: 40,
     width: '100%',
+    paddingVertical: 10,
   },
   dot: {
     height: 10,

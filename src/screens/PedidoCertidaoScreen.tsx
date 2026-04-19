@@ -4,12 +4,14 @@ import { ShoppingCart, Plus, MapPin, Hash, X } from 'lucide-react-native';
 import { colors, spacing, borderRadius } from '../theme/theme';
 import { useAppContext } from '../context/AppContext';
 import { LocationWizard } from '../modals/LocationWizard';
+import { QuickMatriculaModal } from '../modals/QuickMatriculaModal';
 import { CERTIDAO_PRICE } from '../lib/config';
 
 export const PedidoCertidaoScreen = ({ navigation }: any) => {
   const { state, dispatch } = useAppContext();
   const [isFABExpanded, setIsFABExpanded] = useState(false);
   const [wizardVisible, setWizardVisible] = useState(false);
+  const [quickMatriculaVisible, setQuickMatriculaVisible] = useState(false);
   const animation = useState(new Animated.Value(0))[0];
 
   const toggleFAB = () => {
@@ -120,7 +122,13 @@ export const PedidoCertidaoScreen = ({ navigation }: any) => {
 
         <Animated.View style={[styles.subBtnContainer, subBtnStyle(1)]}>
             <Text style={styles.subBtnLabel}>Matrícula</Text>
-            <TouchableOpacity style={[styles.subBtn, { backgroundColor: colors.accent.blue }]}>
+            <TouchableOpacity 
+                style={[styles.subBtn, { backgroundColor: colors.accent.blue }]}
+                onPress={() => {
+                    toggleFAB();
+                    setQuickMatriculaVisible(true);
+                }}
+            >
                 <Hash size={20} color="white" />
             </TouchableOpacity>
         </Animated.View>
@@ -140,6 +148,11 @@ export const PedidoCertidaoScreen = ({ navigation }: any) => {
         visible={wizardVisible} 
         onClose={() => setWizardVisible(false)} 
         navigation={navigation}
+      />
+
+      <QuickMatriculaModal 
+        visible={quickMatriculaVisible}
+        onClose={() => setQuickMatriculaVisible(false)}
       />
     </SafeAreaView>
   );
