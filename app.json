@@ -35,14 +35,19 @@
     "plugins": [
       "expo-secure-store",
       "expo-local-authentication",
-      ["@sentry/react-native", { "uploadSourceMaps": false }],
+      [
+        "@sentry/react-native",
+        {
+          "uploadSourceMaps": false
+        }
+      ],
       "expo-font"
     ],
+    "owner": "euallanmartinss",
     "extra": {
       "eas": {
-        "projectId": "3ac2a090-1981-4941-89b4-0d2bd8273354"
+        "projectId": "19b74f4d-8277-4e0b-ab0e-1792818d42cd"
       }
-    },
-    "owner": "mxrtxns03"
+    }
   }
 }
