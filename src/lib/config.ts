@@ -34,19 +34,16 @@ export const REQUEST_TIMEOUT = 15000;
  */
 export const CERTIDAO_PRICE = 76.54;
 
-/**
- * Dados do cartório — informações fixas de exibição.
- */
 export const CARTORIO_INFO = {
-  nome: '3º Oficial de Registro de Imóveis de São Paulo',
+  nome: '3º Ofício de Justiça de Duque de Caxias',
   nomeAbreviado: 'Cartório do Terceiro Ofício',
-  endereco: 'Rua Jacarei, 23, São Paulo - SP',
-  cep: '01319-040',
-  telefone: '(11) 3292-2180',
-  email: 'contato@3risp.com.br',
-  site: 'www.3risp.com.br',
-  horario: '09:00 – 16:00',
-  circunscricao: 'Brás, Santana e Vila Nova Cachoeirinha',
+  endereco: 'Rua Conde de Porto Alegre, nº 24 - Lojas A & B, 25 de Agosto, Duque de Caxias - RJ',
+  cep: '25070-350', // Approximated from the address
+  telefone: '(21) 2672-1449',
+  email: 'faleconosco@3oficiocaxias.com.br',
+  site: 'www.3oficiocaxias.com.br',
+  horario: 'Seg à Sex: 09:00h às 16:30h',
+  circunscricao: '1º e 3º Distritos das 2ª e 4ª Circunscrições de Duque de Caxias',
   /** Aviso obrigatório de segurança */
   avisoSeguranca: 'Por motivos de segurança, não enviamos QR CODE PIX e/ou Boleto por e-mail.',
 };

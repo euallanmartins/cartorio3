@@ -52,11 +52,11 @@ export function useCep() {
     }
   };
 
-  // fix: verificação de circunscrição baseada nos bairros do 3º RI
+  // fix: verificação de circunscrição baseada na cidade de Duque de Caxias
   const isCircunscricao3RISP = useCallback((): boolean => {
     if (!resultado) return false;
-    const lowerBairro = resultado.bairro.toLowerCase();
-    return lowerBairro.includes('brás') || lowerBairro.includes('santana') || lowerBairro.includes('cachoeirinha');
+    const lowerLocalidade = resultado.cidade.toLowerCase();
+    return lowerLocalidade.includes('caxias');
   }, [resultado]);
 
   return { cep, setCep: setCepMasked, resultado, loading, erro, isCircunscricao3RISP };

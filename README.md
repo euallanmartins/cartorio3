@@ -8,7 +8,7 @@
 <h1 align="center">🏛️ Cartório 3º Ofício — App Mobile & Web</h1>
 
 <p align="center">
-  Aplicativo oficial do <strong>3º Oficial de Registro de Imóveis de São Paulo</strong>.<br/>
+  Aplicativo oficial do <strong>3º Ofício de Justiça de Duque de Caxias</strong>.<br/>
   Solicite certidões, acompanhe prenotações, gerencie sua carteira digital e visualize o mapa de matrículas — tudo pelo celular.
 </p>
 
