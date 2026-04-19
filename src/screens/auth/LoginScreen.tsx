@@ -61,8 +61,8 @@ export const LoginScreen = () => {
   };
 
   const handleRegister = async () => {
-    if (!nome || !createEmail || !cpf || !phone || !createPassword || !confirmPassword) {
-        setErrorMsg('Preencha todos os campos.');
+    if (!nome || !createEmail || !createPassword || !confirmPassword) {
+        setErrorMsg('Preencha os campos obrigatórios.');
         return;
     }
     if (createPassword !== confirmPassword) {
@@ -76,8 +76,6 @@ export const LoginScreen = () => {
       const result = await authService.register({
         name: nome,
         email: createEmail,
-        cpf: cpf.replace(/\D/g, ''),
-        phone: phone.replace(/\D/g, ''),
         password: createPassword,
       });
 
@@ -270,10 +268,6 @@ export const LoginScreen = () => {
                       <AuthInput placeholder="Nome completo" value={nome} onChangeText={(t: string) => { setNome(t); setErrorMsg(null); }} />
                       <View style={styles.spacer} />
                       <AuthInput placeholder="E-mail" value={createEmail} onChangeText={(t: string) => { setCreateEmail(t); setErrorMsg(null); }} keyboardType="email-address" />
-                      <View style={styles.spacer} />
-                      <AuthInput placeholder="CPF" value={formatCPF(cpf)} onChangeText={(t: string) => { setCpf(t); setErrorMsg(null); }} keyboardType="numeric" />
-                      <View style={styles.spacer} />
-                      <AuthInput placeholder="Celular" value={formatPhone(phone)} onChangeText={(t: string) => { setPhone(t); setErrorMsg(null); }} keyboardType="phone-pad" />
                       <View style={styles.spacer} />
                       <AuthInput placeholder="Senha" value={createPassword} onChangeText={(t: string) => { setCreatePassword(t); setErrorMsg(null); }} secureTextEntry />
                       <View style={styles.spacer} />

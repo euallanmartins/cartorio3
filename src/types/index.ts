@@ -172,8 +172,8 @@ export interface LoginResponse {
 export interface RegisterRequest {
   name: string;
   email: string;
-  cpf: string;
-  phone: string;
+  cpf?: string;
+  phone?: string;
   password: string;
 }
 
