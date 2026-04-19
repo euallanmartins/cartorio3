@@ -1,41 +1,38 @@
-import React, { useState, useRef, useEffect } from 'react';
-import { View, Text, StyleSheet, ImageBackground, TouchableOpacity, SafeAreaView, KeyboardAvoidingView, Platform, ScrollView, Dimensions, NativeScrollEvent, NativeSyntheticEvent } from 'react-native';
+import React, { useState } from 'react';
+import { View, Text, StyleSheet, ImageBackground, TouchableOpacity, SafeAreaView, KeyboardAvoidingView, Platform, ActivityIndicator } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { colors, spacing, borderRadius } from '../../theme/theme';
 import { AuthInput, PageDots } from '../../components/auth/AuthComponents';
+import { useAppContext } from '../../context/AppContext';
+import { authService } from '../../lib/api';
 
-export const LoginScreen = () => {
-  const scrollViewRef = useRef<ScrollView>(null);
-  const [currentSlide, setCurrentSlide] = useState(0);
-  const [slideWidth, setSlideWidth] = useState(Dimensions.get('window').width);
-
-  // Estados locais
+export const LoginScreen = ({ navigation }: any) => {
+  const { dispatch } = useAppContext();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [nome, setNome] = useState('');
-  const [sobrenome, setSobrenome] = useState('');
-  const [createEmail, setCreateEmail] = useState('');
-  const [createPassword, setCreatePassword] = useState('');
-  const [confirmPassword, setConfirmPassword] = useState('');
+  const [loading, setLoading] = useState(false);
+  const [errorMsg, setErrorMsg] = useState<string | null>(null);
 
-  useEffect(() => {
-    const updateLayout = () => {
-      setSlideWidth(Dimensions.get('window').width);
-    };
-    const subscription = Dimensions.addEventListener('change', updateLayout);
-    return () => subscription.remove();
-  }, []);
-
-  const handleScroll = (event: NativeSyntheticEvent<NativeScrollEvent>) => {
-    const slideSize = event.nativeEvent.layoutMeasurement.width;
-    const index = Math.round(event.nativeEvent.contentOffset.x / slideSize);
-    if (index !== currentSlide && index >= 0 && index <= 2) {
-      setCurrentSlide(index);
+  const handleLogin = async () => {
+    if (!email || !password) {
+      setErrorMsg('Preencha e-mail e senha.');
+      return;
     }
-  };
-
-  const navigateToSlide = (index: number) => {
-    scrollViewRef.current?.scrollTo({ x: index * slideWidth, animated: true });
+    
+    setLoading(true);
+    setErrorMsg(null);
+    
+    try {
+      const response = await authService.login({ email, password });
+      
+      if (response.token && response.user) {
+        dispatch({ type: 'LOGIN_SUCCESS', payload: undefined, token: response.token, user: response.user } as any);
+      }
+    } catch (e: any) {
+      setErrorMsg(e.message || 'Erro interno no login');
+    } finally {
+      setLoading(false);
+    }
   };
 
   const renderLogo = () => (
@@ -58,153 +55,79 @@ export const LoginScreen = () => {
             behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
             style={styles.flex1}
           >
-            <View style={styles.carouselContainer}>
-              <ScrollView 
-                ref={scrollViewRef}
-                horizontal
-                pagingEnabled={Platform.OS !== 'web'}
-                snapToInterval={Platform.OS === 'web' ? slideWidth : undefined}
-                snapToAlignment="center"
-                decelerationRate="fast"
-                showsHorizontalScrollIndicator={false}
-                onScroll={handleScroll}
-                scrollEventThrottle={16}
-                contentContainerStyle={styles.flexGrow}
-              >
-                
-                {/* SLIDE 1: ONBOARDING PRINCIPAL */}
-                <ScrollView contentContainerStyle={styles.scrollContent} showsVerticalScrollIndicator={false}>
-                  <View style={{ width: slideWidth - 64 }}>
-                    {renderLogo()}
-                    <View style={styles.titleContainer}>
-                      <Text style={styles.headline}>O Cartório virtual que faltava</Text>
-                    </View>
-                    <Text style={styles.onboardingSubtitle}>
-                      Acompanhe o andamento do seu processo e/ou solicite sua certidão de matrícula.
-                    </Text>
+            <View style={styles.content}>
+              {renderLogo()}
+              
+              <View style={styles.titleContainerCenter}>
+                <Text style={styles.titleCenter}>Login</Text>
+              </View>
 
-                    <View style={styles.spacerHuge} />
-                    
-                    <TouchableOpacity 
-                      style={styles.primaryBtnFull} 
-                      onPress={() => navigateToSlide(2)}
-                    >
-                      <Text style={styles.primaryBtnText}>Criar conta</Text>
-                    </TouchableOpacity>
+              {errorMsg && (
+                <View style={styles.errorBox}>
+                  <Ionicons name="alert-circle" size={20} color={colors.status.danger} />
+                  <Text style={styles.errorBoxText}>{errorMsg}</Text>
+                </View>
+              )}
 
-                    <TouchableOpacity 
-                      style={styles.linkBtnCenter} 
-                      onPress={() => navigateToSlide(1)}
-                    >
-                      <Text style={styles.linkText}>Já tem conta? Logar</Text>
-                    </TouchableOpacity>
+              <View style={styles.formContainer}>
+                <AuthInput
+                  label="Endereço de e-mail"
+                  placeholder="digite o seu e-mail"
+                  value={email}
+                  onChangeText={(t: string) => {
+                      setEmail(t);
+                      if (errorMsg) setErrorMsg(null);
+                  }}
+                  keyboardType="email-address"
+                />
+                <View style={styles.spacer} />
+                <AuthInput
+                  label="Senha"
+                  placeholder="digite sua senha"
+                  value={password}
+                  onChangeText={(t: string) => {
+                      setPassword(t);
+                      if (errorMsg) setErrorMsg(null);
+                  }}
+                  secureTextEntry
+                />
+
+                <View style={styles.spacerLarge} />
+
+                <View style={styles.loginActionRow}>
+                  <TouchableOpacity style={styles.linkBtnLeft}>
+                    <Text style={styles.linkTextInline}>Esqueceu a senha?</Text>
+                  </TouchableOpacity>
+
+                  <TouchableOpacity 
+                    style={[styles.primaryBtnAuto, loading && styles.primaryBtnDisabled]} 
+                    onPress={handleLogin}
+                    disabled={loading}
+                  >
+                    {loading ? (
+                       <ActivityIndicator size="small" color="white" />
+                    ) : (
+                       <Text style={styles.primaryBtnText}>Login</Text>
+                    )}
+                  </TouchableOpacity>
+                </View>
+
+                <View style={styles.spacerHuge} />
+
+                <View style={styles.registerRow}>
+                  <View style={styles.registerTextGroup}>
+                    <Text style={styles.linkTextInline}>Primeiro acesso?</Text>
+                    <Ionicons name="arrow-forward" size={16} color={colors.text.muted} />
                   </View>
-                </ScrollView>
-
-                {/* SLIDE 2: LOGIN */}
-                <ScrollView contentContainerStyle={styles.scrollContent} showsVerticalScrollIndicator={false}>
-                  <View style={{ width: slideWidth - 64 }}>
-                    {renderLogo()}
-                    
-                    <View style={styles.titleContainerCenter}>
-                      <Text style={styles.titleCenter}>Login</Text>
-                    </View>
-
-                    <View style={styles.formContainer}>
-                      <AuthInput
-                        label="Endereço de e-mail"
-                        placeholder="digite o seu e-mail"
-                        value={email}
-                        onChangeText={setEmail}
-                        keyboardType="email-address"
-                      />
-                      <View style={styles.spacer} />
-                      <AuthInput
-                        label="Senha"
-                        placeholder="digite sua senha"
-                        value={password}
-                        onChangeText={setPassword}
-                        secureTextEntry
-                      />
-
-                      <View style={styles.spacerLarge} />
-
-                      <View style={styles.loginActionRow}>
-                        <TouchableOpacity style={styles.linkBtnLeft}>
-                          <Text style={styles.linkTextInline}>Esqueceu a senha?</Text>
-                        </TouchableOpacity>
-
-                        <TouchableOpacity 
-                          style={styles.primaryBtnAuto} 
-                          onPress={() => console.log('Mock Login')}
-                        >
-                          <Text style={styles.primaryBtnText}>Login</Text>
-                        </TouchableOpacity>
-                      </View>
-
-                      <View style={styles.spacerHuge} />
-
-                      <View style={styles.registerRow}>
-                        <View style={styles.registerTextGroup}>
-                          <Text style={styles.linkTextInline}>Primeiro acesso?</Text>
-                          <Ionicons name="arrow-forward" size={16} color={colors.text.muted} />
-                        </View>
-                        <TouchableOpacity onPress={() => navigateToSlide(2)}>
-                          <Text style={styles.linkTextAccent}>Criar conta</Text>
-                        </TouchableOpacity>
-                      </View>
-                    </View>
-                  </View>
-                </ScrollView>
-
-                {/* SLIDE 3: CRIAR CONTA */}
-                <ScrollView contentContainerStyle={styles.scrollContent} showsVerticalScrollIndicator={false}>
-                  <View style={{ width: slideWidth - 64 }}>
-                    {renderLogo()}
-
-                    <View style={styles.titleContainerCenter}>
-                      <Text style={styles.titleCenter}>Criar Conta</Text>
-                      <Text style={styles.subtitleCenter}>Preencha os campos abaixo</Text>
-                    </View>
-
-                    <View style={styles.formContainer}>
-                      <AuthInput placeholder="Nome" value={nome} onChangeText={setNome} />
-                      <View style={styles.spacer} />
-                      <AuthInput placeholder="Sobrenome" value={sobrenome} onChangeText={setSobrenome} />
-                      <View style={styles.spacer} />
-                      <AuthInput placeholder="E-mail" value={createEmail} onChangeText={setCreateEmail} keyboardType="email-address" />
-                      <View style={styles.spacer} />
-                      <AuthInput placeholder="Senha" value={createPassword} onChangeText={setCreatePassword} secureTextEntry />
-                      <View style={styles.spacer} />
-                      <AuthInput placeholder="Confirme a Senha" value={confirmPassword} onChangeText={setConfirmPassword} secureTextEntry />
-
-                      <View style={styles.spacerLarge} />
-
-                      <TouchableOpacity 
-                        style={styles.primaryBtnFull} 
-                        onPress={() => console.log('Mock Register')}
-                      >
-                        <Text style={styles.primaryBtnText}>Criar Conta</Text>
-                      </TouchableOpacity>
-
-                      <View style={styles.spacerLarge} />
-
-                      <TouchableOpacity 
-                        style={styles.linkBtnCenterRow} 
-                        onPress={() => navigateToSlide(1)}
-                      >
-                        <Ionicons name="arrow-back" size={16} color="white" />
-                        <Text style={styles.linkTextWhite}>Já tem uma conta? Logar</Text>
-                      </TouchableOpacity>
-                    </View>
-                  </View>
-                </ScrollView>
-
-              </ScrollView>
+                  <TouchableOpacity onPress={() => navigation.navigate('Register')}>
+                    <Text style={styles.linkTextAccent}>Criar conta</Text>
+                  </TouchableOpacity>
+                </View>
+              </View>
             </View>
           </KeyboardAvoidingView>
           
-          <PageDots total={3} activeIndex={currentSlide} />
+          <PageDots total={3} activeIndex={1} />
           
           {/* Footer Rights */}
           <View style={styles.footerContainer}>
@@ -225,31 +148,24 @@ const styles = StyleSheet.create({
   flex1: {
     flex: 1,
   },
-  flexGrow: {
-    flexGrow: 1,
-  },
   background: {
     flex: 1,
   },
   overlay: {
     flex: 1,
-    backgroundColor: 'rgba(0, 0, 0, 0.45)', // fundo azul escuro com opacidade
+    backgroundColor: 'rgba(0, 0, 0, 0.45)',
   },
   container: {
     flex: 1,
   },
-  carouselContainer: {
+  content: {
     flex: 1,
-    overflow: Platform.OS === 'web' ? 'hidden' : 'visible',
-  },
-  scrollContent: {
     paddingHorizontal: 32,
-    paddingBottom: 100,
-    alignItems: 'center',
+    justifyContent: 'center',
+    paddingBottom: 20,
   },
   logoContainer: {
     alignItems: 'center',
-    marginTop: 60,
     marginBottom: 48,
     width: '100%',
   },
@@ -267,36 +183,31 @@ const styles = StyleSheet.create({
     fontSize: 24,
     fontWeight: 'bold',
   },
-  titleContainer: {
-    marginBottom: 16,
-    width: '100%',
-  },
   titleContainerCenter: {
     marginBottom: 32,
     width: '100%',
     alignItems: 'center',
-  },
-  headline: {
-    color: 'white',
-    fontSize: 42,
-    fontWeight: 'bold',
-    lineHeight: 48,
   },
   titleCenter: {
     color: 'white',
     fontSize: 32,
     fontWeight: 'bold',
   },
-  subtitleCenter: {
-    color: 'rgba(255, 255, 255, 0.8)',
-    fontSize: 16,
-    marginTop: 8,
+  errorBox: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 8,
+    backgroundColor: 'rgba(231, 76, 60, 0.1)',
+    padding: 12,
+    borderRadius: 8,
+    marginBottom: 16,
+    borderWidth: 1,
+    borderColor: 'rgba(231, 76, 60, 0.3)',
   },
-  onboardingSubtitle: {
-    color: 'rgba(255, 255, 255, 0.9)',
-    fontSize: 18,
-    lineHeight: 26,
-    marginBottom: 24,
+  errorBoxText: {
+    color: colors.status.danger,
+    fontSize: 14,
+    flex: 1,
   },
   formContainer: {
     width: '100%',
@@ -310,14 +221,6 @@ const styles = StyleSheet.create({
   spacerHuge: {
     height: 48,
   },
-  primaryBtnFull: {
-    backgroundColor: '#1E6FD9',
-    width: '100%',
-    height: 56,
-    borderRadius: borderRadius.md,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
   primaryBtnAuto: {
     backgroundColor: '#1E6FD9',
     paddingHorizontal: 40,
@@ -325,43 +228,23 @@ const styles = StyleSheet.create({
     borderRadius: borderRadius.md,
     alignItems: 'center',
     justifyContent: 'center',
+    minWidth: 120,
+  },
+  primaryBtnDisabled: {
+    backgroundColor: '#444',
   },
   primaryBtnText: {
     color: 'white',
     fontSize: 16,
     fontWeight: 'bold',
   },
-  linkBtnCenter: {
-    alignItems: 'center',
-    justifyContent: 'center',
-    marginTop: 24,
-    paddingVertical: 10,
-  },
   linkBtnLeft: {
     justifyContent: 'center',
-  },
-  linkBtnCenterRow: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'center',
-    gap: 8,
-    paddingVertical: 10,
-  },
-  linkText: {
-    color: 'rgba(255, 255, 255, 0.8)',
-    fontSize: 16,
-    fontWeight: '500',
-    textDecorationLine: 'underline',
   },
   linkTextInline: {
     color: colors.text.muted,
     fontSize: 14,
     textDecorationLine: 'underline',
-  },
-  linkTextWhite: {
-    color: 'white',
-    fontSize: 15,
-    fontWeight: '600',
   },
   linkTextAccent: {
     color: colors.neon.blue,
