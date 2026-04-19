@@ -62,7 +62,10 @@ export const LoginScreen = () => {
               <ScrollView 
                 ref={scrollViewRef}
                 horizontal
-                pagingEnabled
+                pagingEnabled={Platform.OS !== 'web'}
+                snapToInterval={Platform.OS === 'web' ? slideWidth : undefined}
+                snapToAlignment="center"
+                decelerationRate="fast"
                 showsHorizontalScrollIndicator={false}
                 onScroll={handleScroll}
                 scrollEventThrottle={16}

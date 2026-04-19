@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Text, StyleSheet, ScrollView, TouchableOpacity, Dimensions } from 'react-native';
+import { View, Text, StyleSheet, ScrollView, TouchableOpacity, useWindowDimensions } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Bell, Clock, RefreshCcw, Camera, Wallet, ClipboardList, Ticket, Layers } from 'lucide-react-native';
 import { colors, spacing, borderRadius } from '../theme/theme';
@@ -8,10 +8,10 @@ import { CERTIDAO_PRICE } from '../lib/config';
 import { SectionCard, StatusBadge } from '../components/BaseComponents';
 import { CameraModal } from '../modals/CameraModal';
 
-const { width } = Dimensions.get('window');
-const CARD_WIDTH = (width - (spacing.padding * 2) - spacing.md) / 2;
-
 export const HomeScreen = ({ navigation }: any) => {
+  const { width } = useWindowDimensions();
+  const CARD_WIDTH = (width - (spacing.padding * 2) - spacing.md) / 2;
+
   const { state } = useAppContext();
   const [showCamera, setShowCamera] = React.useState(false);
 

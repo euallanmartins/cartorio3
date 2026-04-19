@@ -35,8 +35,8 @@ export const MapaMatricula = ({ route, navigation }: any) => {
   useEffect(() => {
     if (!address) {
       setRegion({
-        latitude: -23.5505,
-        longitude: -46.6333,
+        latitude: -22.7856,
+        longitude: -43.3117,
         latitudeDelta: 0.01,
         longitudeDelta: 0.01,
       });
