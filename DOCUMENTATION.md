@@ -13,6 +13,7 @@ Este documento detalha a arquitetura final, funcionalidades de produção e o de
 - **Status:** ✅ Ativo e Configurado.
 - **Lógica:** Implementada no `AppContext.tsx`. O saldo da carteira e a lista de prenotações são persistidos localmente.
 - **Banner de Rede:** Hook `useNetworkStatus` dispara um banner Neon Glow fixo no topo (`OfflineBanner`) caso a conexão seja interrompida, avisando que os dados exibidos são do cache.
+- **Resolução de Plataforma:** O Metro Bundler resolverá a extensão `.web` em tempo de bundle, com base na plataforma alvo configurada.
 
 ### 2. Acessibilidade (a11y)
 - **Status:** ✅ Revisado em todas as telas principais (Home, Login, Perfil e Prenotações).
@@ -33,12 +34,14 @@ Para garantir o funcionamento nativo (Biometria, PDF, Compartilhamento), as segu
 
 ```bash
 # Core & Navegação
-npm install @react-navigation/native expo-router lucide-react-native
+npm install @react-navigation/native @react-navigation/native-stack @react-navigation/bottom-tabs expo-router lucide-react-native
+# React Navigation 7 (@react-navigation/native, @react-navigation/native-stack, @react-navigation/bottom-tabs)
 
 # Produção & Nativo
 npm install @react-native-async-storage/async-storage @react-native-community/netinfo 
 npm install @sentry/react-native expo-linking expo-local-authentication 
 npm install expo-sharing expo-file-system expo-secure-store expo-blur expo-linear-gradient
+npm install react-native-maps # Usada exclusivamente na versão nativa de MapaMatricula.tsx
 ```
 
 ## 🚀 Fluxos de Uso Validados
@@ -48,7 +51,7 @@ npm install expo-sharing expo-file-system expo-secure-store expo-blur expo-linea
 | **Autenticação** | Login simulado com validação e biometria preparada. | ✅ |
 | **Consultas** | Acompanhamento de protocolos com visualização de notas devolutivas. | ✅ |
 | **Financeiro** | Dashboard da carteira com extrato e recibos de emolumentos. | ✅ |
-| **Segurança** | Error Boundary interceptando falhas e Sentry pronto para logs. | ✅ |
+| **Segurança** | Error Boundary interceptando falhas e Sentry atuando como ferramenta de monitoramento de erros e exceções em produção. | ✅ |
 
 ---
 **Data da Última Revisão:** 16 de Abril de 2026

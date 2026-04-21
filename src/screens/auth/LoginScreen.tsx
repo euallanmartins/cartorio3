@@ -53,8 +53,12 @@ export const LoginScreen = () => {
       if (response.token && response.user) {
         dispatch({ type: 'LOGIN_SUCCESS', payload: undefined, token: response.token, user: response.user } as any);
       }
-    } catch (e: any) {
-      setErrorMsg(e.message || 'Erro interno no login');
+    } catch (e: unknown) {
+      if (e instanceof Error) {
+        setErrorMsg(e.message);
+      } else {
+        setErrorMsg('Erro interno no login');
+      }
     } finally {
       setLoading(false);
     }
@@ -87,8 +91,12 @@ export const LoginScreen = () => {
             navigateToSlide(1); // Vai para a tela de login
         }, 1500);
       }
-    } catch (error: any) {
-      setErrorMsg(error.message || 'Erro ao criar conta.');
+    } catch (error: unknown) {
+      if (error instanceof Error) {
+        setErrorMsg(error.message);
+      } else {
+        setErrorMsg('Erro ao criar conta.');
+      }
     } finally {
       setLoading(false);
     }

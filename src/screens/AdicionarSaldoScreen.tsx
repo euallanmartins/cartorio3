@@ -181,6 +181,11 @@ const styles = StyleSheet.create({
     color: colors.text.primary,
     minWidth: 100,
     textAlign: 'center',
+    ...Platform.select({
+      web: {
+        outlineStyle: 'none',
+      } as any,
+    }),
   },
   hintText: {
     fontSize: 12,

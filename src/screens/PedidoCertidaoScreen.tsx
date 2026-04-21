@@ -1,5 +1,7 @@
 import React, { useState } from 'react';
-import { View, Text, StyleSheet, SafeAreaView, TouchableOpacity, Animated, FlatList } from 'react-native';
+import { View, Text, StyleSheet, ScrollView, TouchableOpacity, Animated, FlatList } from 'react-native';
+import { StatusBar } from 'expo-status-bar';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { ShoppingCart, Plus, MapPin, Hash, X } from 'lucide-react-native';
 import { colors, spacing, borderRadius } from '../theme/theme';
 import { useAppContext } from '../context/AppContext';
@@ -12,6 +14,7 @@ export const PedidoCertidaoScreen = ({ navigation }: any) => {
   const [isFABExpanded, setIsFABExpanded] = useState(false);
   const [wizardVisible, setWizardVisible] = useState(false);
   const [quickMatriculaVisible, setQuickMatriculaVisible] = useState(false);
+  const insets = useSafeAreaInsets();
   const animation = useState(new Animated.Value(0))[0];
 
   const toggleFAB = () => {
@@ -49,22 +52,25 @@ export const PedidoCertidaoScreen = ({ navigation }: any) => {
   });
 
   return (
-    <SafeAreaView style={styles.container}>
-      <View style={styles.header}>
+    <View style={styles.container}>
+      <StatusBar style="light" />
+      <View style={[styles.header, { paddingTop: Math.max(insets.top, spacing.md) }]}>
         <Text style={styles.headerTitle}>Pedido de Certidão</Text>
         <View style={styles.progressBar} />
       </View>
 
       <View style={styles.content}>
         {state.cart.items.length === 0 ? (
-          <View style={styles.emptyState}>
-            <View style={styles.cartIconCircle}>
-              <ShoppingCart size={48} color={colors.accent.blue} />
+          <ScrollView contentContainerStyle={styles.emptyScrollContent}>
+            <View style={styles.emptyState}>
+              <View style={styles.cartIconCircle}>
+                <ShoppingCart size={48} color={colors.accent.blue} />
+              </View>
+              <Text style={styles.emptyTitle}>Não há nada aqui ainda</Text>
+              <Text style={styles.emptySubtitle}>você ainda não possui nenhuma matrícula no carrinho.</Text>
+              <Text style={styles.emptyInstruction}>Adicione clicando no botão (+) abaixo</Text>
             </View>
-            <Text style={styles.emptyTitle}>Não há nada aqui ainda</Text>
-            <Text style={styles.emptySubtitle}>você ainda não possui nenhuma matrícula no carrinho.</Text>
-            <Text style={styles.emptyInstruction}>Adicione clicando no botão (+) abaixo</Text>
-          </View>
+          </ScrollView>
         ) : (
           <FlatList
             data={state.cart.items}
@@ -154,7 +160,7 @@ export const PedidoCertidaoScreen = ({ navigation }: any) => {
         visible={quickMatriculaVisible}
         onClose={() => setQuickMatriculaVisible(false)}
       />
-    </SafeAreaView>
+    </View>
   );
 };
 
@@ -165,7 +171,7 @@ const styles = StyleSheet.create({
   },
   header: {
     alignItems: 'center',
-    paddingVertical: spacing.md,
+    paddingBottom: spacing.md,
     backgroundColor: colors.background.card,
   },
   headerTitle: {
@@ -261,6 +267,10 @@ const styles = StyleSheet.create({
     color: 'white',
     fontSize: 16,
     fontWeight: 'bold',
+  },
+  emptyScrollContent: {
+    flexGrow: 1,
+    justifyContent: 'center',
   },
   emptyState: {
     flex: 1,

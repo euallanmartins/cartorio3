@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, Text, TextInput, StyleSheet, TouchableOpacity, KeyboardTypeOptions, Animated } from 'react-native';
+import { View, Text, TextInput, StyleSheet, TouchableOpacity, KeyboardTypeOptions, Animated, Platform } from 'react-native';
 import { Eye, EyeOff } from 'lucide-react-native';
 import { colors, borderRadius, spacing } from '../../theme/theme';
 
@@ -118,6 +118,11 @@ const styles = StyleSheet.create({
     flex: 1,
     color: 'white',
     fontSize: 16,
+    ...Platform.select({
+      web: {
+        outlineStyle: 'none',
+      } as any,
+    }),
   },
   errorText: {
     color: '#E74C3C',

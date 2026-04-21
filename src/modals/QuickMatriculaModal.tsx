@@ -164,6 +164,11 @@ const styles = StyleSheet.create({
     flex: 1,
     color: 'white',
     fontSize: 16,
+    ...Platform.select({
+      web: {
+        outlineStyle: 'none',
+      } as any,
+    }),
   },
   errorRow: {
     flexDirection: 'row',

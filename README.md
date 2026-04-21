@@ -1,7 +1,7 @@
 <p align="center">
   <img src="https://img.shields.io/badge/Expo_SDK-54-blue?style=for-the-badge&logo=expo" />
-  <img src="https://img.shields.io/badge/React_Native-0.81-61DAFB?style=for-the-badge&logo=react" />
-  <img src="https://img.shields.io/badge/TypeScript-5.9-3178C6?style=for-the-badge&logo=typescript" />
+  <img src="https://img.shields.io/badge/React_Native-0.79.x-61DAFB?style=for-the-badge&logo=react" />
+  <img src="https://img.shields.io/badge/TypeScript-5.x-3178C6?style=for-the-badge&logo=typescript" />
   <img src="https://img.shields.io/badge/Plataforma-iOS_|_Android_|_Web-green?style=for-the-badge" />
 </p>
 
@@ -39,9 +39,9 @@ src/hooks/useIndicadores.ts ← Taxas Selic/CDI do BCB
 
 | API | Finalidade | Fallback |
 |---|---|---|
-| **ViaCEP** | Autopreenchimento de endereço por CEP | BrasilAPI v2 |
+| **ViaCEP** | Autopreenchimento de endereço por CEP (Em caso de erro na requisição ou resposta HTTP com status de erro) | BrasilAPI v2 |
 | **BrasilAPI** | Fallback de CEP quando ViaCEP falha | — |
-| **Nominatim (OSM)** | Geocoding de endereço → coordenadas para o mapa | Centro de SP |
+| **Nominatim (OSM)** | Geocoding de endereço → coordenadas para o mapa (requer conectividade — sem suporte offline para geocoding) | Centro de SP |
 | **Banco Central (BCB)** | Taxas Selic e CDI em tempo real | Valores zerados |
 | **CNPJ.ws** | Busca de razão social e endereço por CNPJ | — |
 
@@ -98,7 +98,7 @@ npx expo start
 eas build --platform android --profile preview
 
 # Export web estático
-npx expo export --platform web
+npx expo export -p web
 ```
 
 ---

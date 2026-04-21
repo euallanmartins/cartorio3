@@ -8,21 +8,29 @@ import { CERTIDAO_PRICE } from '../lib/config';
 import { SectionCard, StatusBadge } from '../components/BaseComponents';
 import { CameraModal } from '../modals/CameraModal';
 
+interface QuickActionProps {
+  icon: React.ElementType;
+  label: string;
+  color: string;
+  neonColor?: string;
+  onPress: () => void;
+}
+
+const QuickActionCard = ({ icon: Icon, label, color, neonColor, onPress }: QuickActionProps) => (
+  <TouchableOpacity style={styles.quickAction} onPress={onPress}>
+    <View style={[styles.iconCircle, { backgroundColor: 'rgba(255,255,255,0.05)', borderColor: neonColor || color }]}>
+      <Icon size={24} color={neonColor || color} />
+    </View>
+    <Text style={styles.quickActionLabel}>{label}</Text>
+  </TouchableOpacity>
+);
+
 export const HomeScreen = ({ navigation }: any) => {
   const { width } = useWindowDimensions();
   const CARD_WIDTH = (width - (spacing.padding * 2) - spacing.md) / 2;
 
   const { state } = useAppContext();
   const [showCamera, setShowCamera] = React.useState(false);
-
-  const QuickActionCard = ({ icon: Icon, label, color, neonColor, onPress }: any) => (
-    <TouchableOpacity style={styles.quickAction} onPress={onPress}>
-      <View style={[styles.iconCircle, { backgroundColor: 'rgba(255,255,255,0.05)', borderColor: neonColor || color }]}>
-        <Icon size={24} color={neonColor || color} />
-      </View>
-      <Text style={styles.quickActionLabel}>{label}</Text>
-    </TouchableOpacity>
-  );
 
   return (
     <SafeAreaView style={styles.container}>
@@ -46,7 +54,7 @@ export const HomeScreen = ({ navigation }: any) => {
 
         {/* Status Cards Row */}
         <View style={styles.statusRow}>
-          <SectionCard style={[styles.statusCard, { width: CARD_WIDTH } as any]}>
+          <SectionCard style={[styles.statusCard, { width: CARD_WIDTH }]}>
             <Text style={styles.cardTopText}>{state.office.openHours}</Text>
             <View style={styles.clockIconContainer}>
               <Clock color={colors.text.secondary} size={40} strokeWidth={1} />
@@ -59,7 +67,7 @@ export const HomeScreen = ({ navigation }: any) => {
             <Text style={styles.footerSubText}>{state.office.dayOfWeek}</Text>
           </SectionCard>
 
-          <SectionCard style={[styles.statusCard, { width: CARD_WIDTH } as any]}>
+          <SectionCard style={[styles.statusCard, { width: CARD_WIDTH }]}>
             <View style={styles.atendimentoHeader}>
               <Camera size={16} color={colors.text.primary} />
               <Text style={styles.atendimentoTitle}>Atendimento</Text>
@@ -117,7 +125,7 @@ export const HomeScreen = ({ navigation }: any) => {
 };
 
 // Placeholder for User Silhouette if not using an image
-const UserSilhouette = ({ color, size }: any) => (
+const UserSilhouette = ({ color, size }: { color: string, size: number }) => (
   <View style={{ width: size, height: size, borderRadius: size/2, backgroundColor: '#E1E1E1', alignItems: 'center', justifyContent: 'center' }}>
     <Text style={{ fontSize: 20 }}>👤</Text>
   </View>

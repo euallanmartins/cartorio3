@@ -1,5 +1,7 @@
 import React, { useState, useRef } from 'react';
-import { View, Text, StyleSheet, SafeAreaView, TextInput, TouchableOpacity, ScrollView, KeyboardAvoidingView, Platform, Modal, FlatList, ActivityIndicator } from 'react-native';
+import { View, Text, StyleSheet, TextInput, TouchableOpacity, ScrollView, KeyboardAvoidingView, Platform, Modal, FlatList, ActivityIndicator } from 'react-native';
+import { StatusBar } from 'expo-status-bar';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { Search, Ticket, Info, History, AlertCircle, FileText, X, CreditCard, Clock } from 'lucide-react-native';
 import { colors, spacing, borderRadius } from '../theme/theme';
 import { BlurView } from 'expo-blur';
@@ -14,6 +16,7 @@ export const PrenotacoesScreen = () => {
   const [showNote, setShowNote] = useState(false);
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
   const [recentSearches, setRecentSearches] = useState<Array<{ protocolo: string; dv: string; data: string }>>([]);
+  const insets = useSafeAreaInsets();
 
   const handleSearch = async () => {
     if (!protocol || !dv) {
@@ -39,8 +42,12 @@ export const PrenotacoesScreen = () => {
           ...prev.slice(0, 9),
         ];
       });
-    } catch (error: any) {
-      setErrorMsg(error.message || 'Não foi possível consultar o protocolo.');
+    } catch (error: unknown) {
+      if (error instanceof Error) {
+        setErrorMsg(error.message);
+      } else {
+        setErrorMsg('Não foi possível consultar o protocolo.');
+      }
     } finally {
       setLoading(false);
     }
@@ -57,7 +64,8 @@ export const PrenotacoesScreen = () => {
   };
 
   return (
-    <SafeAreaView style={styles.container}>
+    <View style={[styles.container, { paddingTop: insets.top }]}>
+      <StatusBar style="light" />
       <KeyboardAvoidingView 
         behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
         style={{ flex: 1 }}
@@ -270,7 +278,7 @@ export const PrenotacoesScreen = () => {
             </View>
         </BlurView>
       </Modal>
-    </SafeAreaView>
+    </View>
   );
 };
 
@@ -340,6 +348,11 @@ const styles = StyleSheet.create({
     fontSize: 16,
     color: colors.text.primary,
     width: '100%',
+    ...Platform.select({
+      web: {
+        outlineStyle: 'none',
+      } as any,
+    }),
   },
   searchBtn: {
     backgroundColor: colors.accent.blue,

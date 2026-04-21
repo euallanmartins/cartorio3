@@ -6,23 +6,30 @@ import { useAppContext } from '../context/AppContext';
 import { LinearGradient } from 'expo-linear-gradient';
 import { CARTORIO_INFO } from '../lib/config';
 
+interface MenuItemProps {
+  icon: React.ElementType;
+  label: string;
+  onPress?: () => void;
+  isDanger?: boolean;
+}
+
+const MenuItem = ({ icon: Icon, label, onPress, isDanger }: MenuItemProps) => (
+  <TouchableOpacity 
+      style={[styles.menuItem, isDanger && styles.dangerItem]} 
+      onPress={onPress}
+  >
+    <View style={styles.menuLeft}>
+      <View style={[styles.iconContainer, isDanger && { backgroundColor: 'transparent' }]}>
+          <Icon size={20} color={isDanger ? colors.status.danger : colors.text.secondary} />
+      </View>
+      <Text style={[styles.menuLabel, isDanger && { color: colors.status.danger }]}>{label}</Text>
+    </View>
+    {!isDanger && <ChevronRight size={20} color={colors.text.muted} />}
+  </TouchableOpacity>
+);
+
 export const PerfilScreen = ({ navigation }: any) => {
   const { state, dispatch } = useAppContext();
-
-  const MenuItem = ({ icon: Icon, label, onPress, isDanger }: any) => (
-    <TouchableOpacity 
-        style={[styles.menuItem, isDanger && styles.dangerItem]} 
-        onPress={onPress}
-    >
-      <View style={styles.menuLeft}>
-        <View style={[styles.iconContainer, isDanger && { backgroundColor: 'transparent' }]}>
-            <Icon size={20} color={isDanger ? colors.status.danger : colors.text.secondary} />
-        </View>
-        <Text style={[styles.menuLabel, isDanger && { color: colors.status.danger }]}>{label}</Text>
-      </View>
-      {!isDanger && <ChevronRight size={20} color={colors.text.muted} />}
-    </TouchableOpacity>
-  );
 
   const handleDeleteAccount = () => {
     Alert.alert(
