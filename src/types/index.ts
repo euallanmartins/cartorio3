@@ -133,27 +133,27 @@ export interface EnderecoFormatado {
 // ---- Circunscrição ------------------------------------------
 
 export interface Circunscricao {
-  nome: string;           // ex: "Brás", "Santana", "Vila Nova Cachoeirinha"
-  subdistrito: string;    // ex: "6º Subdistrito"
+  nome: string;           // ex: "1º Distrito", "25 de Agosto"
+  subdistrito: string;    // ex: "Duque de Caxias"
   descricao: string;
 }
 
-// Bairros que pertencem ao 3º RISP
+// Áreas de referência para a circunscrição configurada no app
 export const CIRCUNSCRICAO_3RISP: Circunscricao[] = [
   {
-    nome: 'Brás',
-    subdistrito: '6º Subdistrito',
-    descricao: 'Brás pertence a esta Serventia desde 18/10/1934.',
+    nome: '1º Distrito',
+    subdistrito: 'Duque de Caxias',
+    descricao: 'Área de referência para validação inicial de endereços no app.',
   },
   {
-    nome: 'Santana',
-    subdistrito: '8º Subdistrito',
-    descricao: 'Santana pertence a esta Serventia desde 10/08/1931.',
+    nome: '3º Distrito',
+    subdistrito: 'Duque de Caxias',
+    descricao: 'Área de referência para validação inicial de endereços no app.',
   },
   {
-    nome: 'Vila Nova Cachoeirinha',
-    subdistrito: '48º Subdistrito',
-    descricao: 'Vila Nova Cachoeirinha pertence a esta Serventia desde 01/01/1954.',
+    nome: '25 de Agosto',
+    subdistrito: 'Duque de Caxias',
+    descricao: 'Bairro usado como referência nos dados de contato do cartório.',
   },
 ];
 

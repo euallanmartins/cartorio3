@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, SafeAreaView, ScrollView, Modal, Platform, ActivityIndicator } from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity, SafeAreaView, ScrollView, Modal, Platform, ActivityIndicator, Alert } from 'react-native';
 import { ArrowLeft, Wallet, Plus, ChevronDown, ChevronUp, Search, Eye, EyeOff, Receipt, X, Printer, Share2 } from 'lucide-react-native';
 import { colors, spacing, borderRadius } from '../theme/theme';
 import { useAppContext } from '../context/AppContext';
@@ -14,7 +14,11 @@ export const CarteiraDashboard = ({ navigation }: any) => {
   const [activeTab, setActiveTab] = useState('Todas');
   const [selectedTransaction, setSelectedTransaction] = useState<any>(null);
 
-  const transactions = state.wallet.transactions;
+  const transactions = state.wallet.transactions.filter(item => {
+    if (activeTab === 'Créditos') return item.type === 'credit';
+    if (activeTab === 'Débitos') return item.type === 'debit';
+    return true;
+  });
 
   const FilterTab = ({ label, icon: Icon }: any) => {
     const isActive = activeTab === label;
@@ -231,11 +235,17 @@ export const CarteiraDashboard = ({ navigation }: any) => {
                 </View>
 
                 <View style={styles.receiptActions}>
-                    <TouchableOpacity style={styles.rActionBtn}>
+                    <TouchableOpacity
+                        style={styles.rActionBtn}
+                        onPress={() => Alert.alert('Imprimir recibo', 'Pré-visualização de impressão pronta no front-end. A geração oficial depende do backend.')}
+                    >
                         <Printer size={20} color="white" />
                         <Text style={styles.rActionText}>Imprimir</Text>
                     </TouchableOpacity>
-                    <TouchableOpacity style={[styles.rActionBtn, { backgroundColor: colors.background.primary }]}>
+                    <TouchableOpacity
+                        style={[styles.rActionBtn, { backgroundColor: colors.background.primary }]}
+                        onPress={() => Alert.alert('Exportar PDF', 'O botão já responde no front-end. O PDF oficial deve ser emitido pelo backend.')}
+                    >
                         <Share2 size={20} color={colors.text.primary} />
                         <Text style={[styles.rActionText, { color: colors.text.primary }]}>PDF</Text>
                     </TouchableOpacity>

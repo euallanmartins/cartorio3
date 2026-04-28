@@ -35,12 +35,6 @@
     "plugins": [
       "expo-secure-store",
       "expo-local-authentication",
-      [
-        "@sentry/react-native",
-        {
-          "uploadSourceMaps": false
-        }
-      ],
       "expo-font"
     ],
     "owner": "euallanmartinss",

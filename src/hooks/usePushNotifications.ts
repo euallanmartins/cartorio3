@@ -35,9 +35,6 @@ export const usePushNotifications = () => {
       token = (await Notifications.getExpoPushTokenAsync({
         projectId: 'mock-project-id' // Em produção seria o ID do projeto Expo
       })).data;
-      console.log('Expo Push Token:', token);
-    } else {
-      console.log('Notificações Push não funcionam em simuladores!');
     }
 
     if (Platform.OS === 'android') {
@@ -59,8 +56,8 @@ export const usePushNotifications = () => {
       setNotification(notification);
     });
 
-    responseListener.current = Notifications.addNotificationResponseReceivedListener(response => {
-      console.log('Resposta de notificação:', response);
+    responseListener.current = Notifications.addNotificationResponseReceivedListener(() => {
+      // Hook reservado para navegação por notificações após integração.
     });
 
     return () => {

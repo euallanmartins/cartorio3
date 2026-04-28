@@ -38,7 +38,7 @@ export const AuthInput = ({
         <TextInput
           style={styles.input}
           placeholder={placeholder}
-          placeholderTextColor="#888"
+          placeholderTextColor="rgba(255,255,255,0.62)"
           value={value}
           onChangeText={onChangeText}
           secureTextEntry={secureTextEntry && !isPasswordVisible}
@@ -53,7 +53,7 @@ export const AuthInput = ({
             accessibilityLabel={isPasswordVisible ? "Ocultar senha" : "Mostrar senha"}
             accessibilityRole="button"
           >
-            {isPasswordVisible ? <EyeOff color="white" size={20} /> : <Eye color="white" size={20} />}
+            {isPasswordVisible ? <EyeOff color={colors.text.inverse} size={20} /> : <Eye color={colors.text.inverse} size={20} />}
           </TouchableOpacity>
         )}
       </View>
@@ -89,10 +89,10 @@ export const PageDots = ({ total, activeIndex }: PageDotsProps) => {
 const styles = StyleSheet.create({
   container: {
     width: '100%',
-    marginBottom: spacing.md,
+    marginBottom: spacing.sm,
   },
   label: {
-    color: '#4A90F5',
+    color: colors.accent.blueLight,
     fontSize: 12,
     fontWeight: 'bold',
     marginBottom: 4,
@@ -101,23 +101,23 @@ const styles = StyleSheet.create({
   inputWrapper: {
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: 'rgba(255, 255, 255, 0.08)',
+    backgroundColor: 'rgba(255, 255, 255, 0.12)',
     borderWidth: 1.5,
-    borderColor: '#444',
+    borderColor: 'rgba(255,255,255,0.32)',
     borderRadius: borderRadius.md,
-    height: 56,
-    paddingHorizontal: 16,
+    height: 48,
+    paddingHorizontal: 14,
   },
   inputFocused: {
-    borderColor: '#1E6FFF',
+    borderColor: colors.accent.blueLight,
   },
   inputError: {
-    borderColor: '#E74C3C',
+    borderColor: colors.status.danger,
   },
   input: {
     flex: 1,
-    color: 'white',
-    fontSize: 16,
+    color: colors.text.inverse,
+    fontSize: 15,
     ...Platform.select({
       web: {
         outlineStyle: 'none',
@@ -125,7 +125,7 @@ const styles = StyleSheet.create({
     }),
   },
   errorText: {
-    color: '#E74C3C',
+    color: colors.status.danger,
     fontSize: 12,
     marginTop: 4,
     marginLeft: 4,
@@ -144,10 +144,10 @@ const styles = StyleSheet.create({
   },
   dotActive: {
     width: 32,
-    backgroundColor: '#1E6FFF',
+    backgroundColor: colors.accent.blue,
   },
   dotInactive: {
     width: 10,
-    backgroundColor: '#888888',
+    backgroundColor: 'rgba(255,255,255,0.55)',
   },
 });

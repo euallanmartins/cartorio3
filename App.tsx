@@ -11,11 +11,14 @@ import { AppErrorBoundary } from './src/components/AppErrorBoundary';
 import { OfflineBanner } from './src/components/OfflineBanner';
 import * as Sentry from '@sentry/react-native';
 
-// Inicialização do Sentry (Configurar DSN em .env)
-Sentry.init({
-  dsn: "https://[REDACTED]@o0.ingest.sentry.io/4500", // Substituir por DSN real
-  debug: false,
-});
+const SENTRY_DSN = '';
+
+if (SENTRY_DSN) {
+  Sentry.init({
+    dsn: SENTRY_DSN,
+    debug: false,
+  });
+}
 
 function App() {
   return (

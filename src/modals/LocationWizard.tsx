@@ -93,7 +93,7 @@ export const LocationWizard = ({ visible, onClose, navigation }: { visible: bool
         {/* Top Visual */}
         <View style={styles.topSection}>
           <View style={styles.placeholderCityImage}>
-            <Text style={styles.cityText}>SÃO PAULO</Text>
+            <Text style={styles.cityText}>DUQUE DE CAXIAS</Text>
             <View style={styles.imageGrid}>
                <View style={styles.gridBox} />
                <View style={styles.gridBox} />
@@ -105,7 +105,7 @@ export const LocationWizard = ({ visible, onClose, navigation }: { visible: bool
 
         {/* Panel */}
         <View style={styles.bottomPanel}>
-          <Text style={styles.subtitle}>Brás, Santana e Vila Nova Cachoeirinha</Text>
+          <Text style={styles.subtitle}>1º e 3º Distritos de Duque de Caxias</Text>
 
           {/* Step 1: SQL/Contribuinte */}
           {step === 1 && (
@@ -246,8 +246,8 @@ export const LocationWizard = ({ visible, onClose, navigation }: { visible: bool
                     <View style={styles.alertBox}>
                       <AlertTriangle size={14} color={colors.status.warning} />
                       <Text style={styles.alertText}>
-                        Este endereço pode não pertencer à circunscrição do 3º RI de SP. 
-                        Consulte em registrodeimoveis.org.br
+                        Este endereço pode não pertencer à circunscrição deste Ofício. 
+                        Consulte o cartório antes de finalizar o pedido.
                       </Text>
                     </View>
                   )}
@@ -306,7 +306,7 @@ export const LocationWizard = ({ visible, onClose, navigation }: { visible: bool
                    handleClose();
                    const addressString = logradouro 
                      ? `${logradouro}, ${cidade} - ${uf}`
-                     : 'São Paulo, SP'; // Default map query fallback
+                    : 'Duque de Caxias, RJ'; // Default map query fallback
                    navigation.navigate('MapaMatricula', { address: addressString });
                 }}
               >

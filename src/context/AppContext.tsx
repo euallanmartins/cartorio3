@@ -188,7 +188,7 @@ export const AppProvider = ({ children }: { children: ReactNode }) => {
         dispatch({ type: 'SET_BALANCE', balance: balanceData.balance });
         dispatch({ type: 'SET_TRANSACTIONS', transactions: transacoesData });
       } catch (e) {
-        console.log('Falha ao carregar dados da API no contexto inicial', e);
+        console.warn('Falha ao carregar dados da API no contexto inicial', e);
       }
     };
 

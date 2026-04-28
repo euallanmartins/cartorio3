@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, Text, StyleSheet, ScrollView, TouchableOpacity, Animated, FlatList } from 'react-native';
+import { View, Text, StyleSheet, ScrollView, TouchableOpacity, Animated, FlatList, Alert, ActivityIndicator } from 'react-native';
 import { StatusBar } from 'expo-status-bar';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { ShoppingCart, Plus, MapPin, Hash, X } from 'lucide-react-native';
@@ -8,12 +8,14 @@ import { useAppContext } from '../context/AppContext';
 import { LocationWizard } from '../modals/LocationWizard';
 import { QuickMatriculaModal } from '../modals/QuickMatriculaModal';
 import { CERTIDAO_PRICE } from '../lib/config';
+import { certidaoService } from '../lib/api';
 
 export const PedidoCertidaoScreen = ({ navigation }: any) => {
   const { state, dispatch } = useAppContext();
   const [isFABExpanded, setIsFABExpanded] = useState(false);
   const [wizardVisible, setWizardVisible] = useState(false);
   const [quickMatriculaVisible, setQuickMatriculaVisible] = useState(false);
+  const [submitting, setSubmitting] = useState(false);
   const insets = useSafeAreaInsets();
   const animation = useState(new Animated.Value(0))[0];
 
@@ -50,6 +52,29 @@ export const PedidoCertidaoScreen = ({ navigation }: any) => {
     ],
     opacity: animation,
   });
+
+  const handleCheckout = async () => {
+    if (state.cart.items.length === 0 || submitting) {
+      return;
+    }
+
+    try {
+      setSubmitting(true);
+      await Promise.all(
+        state.cart.items.map(({ matricula, address, tipo }) =>
+          certidaoService.solicitar({ matricula, address, tipo })
+        )
+      );
+
+      dispatch({ type: 'CLEAR_CART' });
+      Alert.alert('Pedido enviado', 'Sua solicitação de certidão foi registrada com sucesso.');
+      navigation.navigate('MeusPedidos');
+    } catch (error) {
+      Alert.alert('Erro', error instanceof Error ? error.message : 'Não foi possível finalizar o pedido.');
+    } finally {
+      setSubmitting(false);
+    }
+  };
 
   return (
     <View style={styles.container}>
@@ -102,8 +127,16 @@ export const PedidoCertidaoScreen = ({ navigation }: any) => {
                     R$ {state.cart.items.reduce((acc, curr) => acc + curr.price, 0).toFixed(2).replace('.', ',')}
                   </Text>
                 </View>
-                <TouchableOpacity style={styles.checkoutBtn}>
-                  <Text style={styles.checkoutBtnText}>Finalizar Pedido</Text>
+                <TouchableOpacity
+                  style={[styles.checkoutBtn, submitting && styles.checkoutBtnDisabled]}
+                  onPress={handleCheckout}
+                  disabled={submitting}
+                >
+                  {submitting ? (
+                    <ActivityIndicator size="small" color="white" />
+                  ) : (
+                    <Text style={styles.checkoutBtnText}>Finalizar Pedido</Text>
+                  )}
                 </TouchableOpacity>
               </View>
             )}
@@ -262,6 +295,9 @@ const styles = StyleSheet.create({
     borderRadius: borderRadius.md,
     alignItems: 'center',
     justifyContent: 'center',
+  },
+  checkoutBtnDisabled: {
+    opacity: 0.7,
   },
   checkoutBtnText: {
     color: 'white',

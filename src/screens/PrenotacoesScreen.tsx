@@ -1,5 +1,5 @@
 import React, { useState, useRef } from 'react';
-import { View, Text, StyleSheet, TextInput, TouchableOpacity, ScrollView, KeyboardAvoidingView, Platform, Modal, FlatList, ActivityIndicator } from 'react-native';
+import { View, Text, StyleSheet, TextInput, TouchableOpacity, ScrollView, KeyboardAvoidingView, Platform, Modal, FlatList, ActivityIndicator, Alert } from 'react-native';
 import { StatusBar } from 'expo-status-bar';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { Search, Ticket, Info, History, AlertCircle, FileText, X, CreditCard, Clock } from 'lucide-react-native';
@@ -12,6 +12,7 @@ export const PrenotacoesScreen = () => {
   const [protocol, setProtocol] = useState('');
   const [dv, setDv] = useState('');
   const [loading, setLoading] = useState(false);
+  const [payingComplement, setPayingComplement] = useState(false);
   const [searchResult, setSearchResult] = useState<Prenotacao | null>(null);
   const [showNote, setShowNote] = useState(false);
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
@@ -60,6 +61,22 @@ export const PrenotacoesScreen = () => {
       case 'Cancelado': return colors.status.danger;
       case 'Aguardando Pagamento': return colors.accent.purple;
       default: return colors.accent.blue;
+    }
+  };
+
+  const handlePayComplement = async () => {
+    if (!searchResult?.complementoValor || payingComplement) {
+      return;
+    }
+
+    try {
+      setPayingComplement(true);
+      await prenotacaoService.pagarComplemento(searchResult.id, searchResult.complementoValor);
+      Alert.alert('Complemento registrado', 'Fluxo validado no front-end. A cobrança real depende do backend.');
+    } catch (error) {
+      Alert.alert('Erro', error instanceof Error ? error.message : 'Não foi possível registrar o complemento.');
+    } finally {
+      setPayingComplement(false);
     }
   };
 
@@ -179,10 +196,18 @@ export const PrenotacoesScreen = () => {
                 )}
 
                 {searchResult.complementoValor && searchResult.complementoValor > 0 && (
-                  <TouchableOpacity style={styles.complementoBtn}>
-                    <CreditCard size={18} color={colors.accent.blue} />
+                  <TouchableOpacity
+                    style={[styles.complementoBtn, payingComplement && styles.disabledAction]}
+                    onPress={handlePayComplement}
+                    disabled={payingComplement}
+                  >
+                    {payingComplement ? (
+                      <ActivityIndicator size="small" color={colors.accent.blue} />
+                    ) : (
+                      <CreditCard size={18} color={colors.accent.blue} />
+                    )}
                     <Text style={styles.complementoBtnText}>
-                      Pagar Complemento — R$ {searchResult.complementoValor.toFixed(2).replace('.', ',')}
+                      {payingComplement ? 'Registrando...' : `Pagar Complemento — R$ ${searchResult.complementoValor.toFixed(2).replace('.', ',')}`}
                     </Text>
                   </TouchableOpacity>
                 )}
@@ -526,6 +551,9 @@ const styles = StyleSheet.create({
     color: colors.accent.blue,
     fontWeight: 'bold',
     fontSize: 14,
+  },
+  disabledAction: {
+    opacity: 0.7,
   },
   // History
   historySection: {

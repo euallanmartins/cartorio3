@@ -12,6 +12,16 @@ export const AdicionarSaldoScreen = ({ navigation }: any) => {
     const amount = parseFloat(value.replace(',', '.')) || 0;
     if (amount > 0) {
       dispatch({ type: 'ADD_CREDIT', amount });
+      dispatch({
+        type: 'ADD_TRANSACTION',
+        transaction: {
+          id: `credit_${Date.now()}`,
+          type: 'credit',
+          amount,
+          date: new Date().toLocaleDateString('pt-BR'),
+          description: 'Adição de Saldo - PIX',
+        },
+      });
       navigation.goBack();
     }
   };

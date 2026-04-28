@@ -150,14 +150,10 @@ export const cepService = {
 
   /**
    * Verifica se o CEP pertence à circunscrição do 3º RISP.
-   * Bairros: Brás, Santana, Vila Nova Cachoeirinha.
+   * Validação mock baseada nos distritos atendidos em Duque de Caxias.
    */
   verificarCircunscricao(bairro: string): boolean {
-    const bairrosAbrangidos = [
-      'brás', 'bras', 'santana', 'vila nova cachoeirinha',
-      'cachoeirinha', 'vila nova', 'tucuruvi', 'mandaqui',
-      'lauzane paulista', 'tremembé', 'jaçanã', 'jacana',
-    ];
+    const bairrosAbrangidos = ['duque de caxias', 'centro', '25 de agosto', 'vinte e cinco de agosto'];
     return bairrosAbrangidos.some(b =>
       bairro.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '')
         .includes(b.normalize('NFD').replace(/[\u0300-\u036f]/g, ''))

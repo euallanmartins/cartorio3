@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Text, StyleSheet, ScrollView, TouchableOpacity, useWindowDimensions } from 'react-native';
+import { View, Text, StyleSheet, ScrollView, TouchableOpacity, useWindowDimensions, Alert } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Bell, Clock, RefreshCcw, Camera, Wallet, ClipboardList, Ticket, Layers } from 'lucide-react-native';
 import { colors, spacing, borderRadius } from '../theme/theme';
@@ -47,7 +47,10 @@ export const HomeScreen = ({ navigation }: any) => {
               <Text style={styles.userName}>{state.user.name}</Text>
             </View>
           </View>
-          <TouchableOpacity style={styles.notificationBtn}>
+          <TouchableOpacity
+            style={styles.notificationBtn}
+            onPress={() => Alert.alert('Notificações', 'A central de notificações está pronta no front-end e aguarda integração com o backend.')}
+          >
             <Bell color={colors.text.primary} size={24} />
           </TouchableOpacity>
         </View>
@@ -113,7 +116,7 @@ export const HomeScreen = ({ navigation }: any) => {
               label="Meus Pedidos\n(Certidão)" 
               color={colors.accent.pink} 
               neonColor={colors.neon.pink}
-              onPress={() => navigation.navigate('PedidoTab')}
+              onPress={() => navigation.navigate('MeusPedidos')}
             />
           </ScrollView>
         </View>
