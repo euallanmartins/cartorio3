@@ -1,8 +1,0 @@
-  --non-interactive is not supported, use $CI=1 instead
-[33m› [1m[@sentry/react-native/expo][22m Missing config for [1morganization, project[22m. Environment variables will be used as a fallback during the build. https://docs.sentry.io/platforms/react-native/manual-setup/[0m
-The following packages should be updated for best compatibility with the installed expo version:
-  expo@54.0.33 - expected version: ~54.0.34
-  expo-file-system@19.0.21 - expected version: ~19.0.22
-  expo-linking@8.0.11 - expected version: ~8.0.12
-  expo-notifications@0.32.16 - expected version: ~0.32.17
-Your project may not work correctly until you install the expected versions of the packages.
